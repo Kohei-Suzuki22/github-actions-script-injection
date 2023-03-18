@@ -8,9 +8,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Assign label
+        #  セキュリティ✖︎
+        ## run:の中で、ssue_title="${{ github.event.issue.title }}" のように外部から渡させる値を持たせると、
+        ## その値が、悪意あるコマンドの場合に実行されてしまうので、セキュリティが脆弱
+        # run: |
+        #   issue_title="${{ github.event.issue.title }}"
+        #   if [[ "$issue_title" == *"bug"* ]]; then
+        #   echo "Issue is about a bug!"
+        #   else
+        #   echo "Issue is not about a bug"
+        #   fi
+
+        # セキュリティ○
+        ## envを使って、外部から入力される値を一度変数として持ち、run の中では envで定義したものを参照すること
+        ## そうすれば、run の中に渡ってくる時点で、文字列テキストとして認識されるので、悪意あるコマンドは実行されない。
+        env:
+          TITLE: ${{ github.event.issue.title }}
         run: |
-          issue_title="${{ github.event.issue.title }}"
-          if [[ "$issue_title" == *"bug"* ]]; then
+          if [[ "$TITLE" == *"bug"* ]]; then
           echo "Issue is about a bug!"
           else
           echo "Issue is not about a bug"
