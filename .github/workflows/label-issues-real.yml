@@ -5,6 +5,13 @@ on:
       - opened
 jobs:
   assign-label:
+    #  ワークフローが実行できる権限を指定する。
+    ## permissions: は、jobレベルでの指定と、ワークフローレベルでの指定ができる。
+    ## permissionsを何も指定していない場合は、すべての実行が可能となるので、
+    ## よりセキュリティを強固にするためにはpermissionsを付与するのが好ましい
+    ## (例えば、script injection も、権限で制限されていれば実行しない可能性が高まるのでより安心になる。)
+    permissions:
+      issues: write
     runs-on: ubuntu-latest
     steps:
       # トリガーとして開かれたissue名にbugが入っていたら、バグラベルと付与する。
