@@ -7,6 +7,7 @@ jobs:
   assign-label:
     #  ワークフローが実行できる権限を指定する。
     ## permissions: は、jobレベルでの指定と、ワークフローレベルでの指定ができる。
+    ## ※ permissionsで指定したスコープで、GITHUB_TOKENが有効になる。
     ## permissionsを何も指定していない場合は、すべての実行が可能となるので、
     ## よりセキュリティを強固にするためにはpermissionsを付与するのが好ましい
     ## (例えば、script injection も、権限で制限されていれば実行しない可能性が高まるのでより安心になる。)
@@ -15,6 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # トリガーとして開かれたissue名にbugが入っていたら、バグラベルと付与する。
+      #
+      ## ${{ secrets.GITHUB_TOKEN }}は、github API にリクエストを送る際の認証に使う。
+      ## GITHUB_TOKENシークレット変数をgithubが自動的に生成してくれる。
+      ## 有効期間は、そのjob内のみ。
+      ## 
       - name: Assign label
         if: contains(github.event.issue.title, 'bug')
         run: |
