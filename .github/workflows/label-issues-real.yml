@@ -7,6 +7,7 @@ jobs:
   assign-label:
     runs-on: ubuntu-latest
     steps:
+      # トリガーとして開かれたissue名にbugが入っていたら、バグラベルと付与する。
       - name: Assign label
         if: contains(github.event.issue.title, 'bug')
         run: |
